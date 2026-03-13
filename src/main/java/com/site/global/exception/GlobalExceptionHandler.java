@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
             Exception ex, WebRequest request) {
         GlobalResponse<Object> errorResponse = new GlobalResponse<>(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(), // 500
-                "😭 INTERNAL SERVER ERROR:  " + ex.getMessage(),
+                "INTERNAL SERVER ERROR:  " + ex.getMessage(),
                 null
         );
 

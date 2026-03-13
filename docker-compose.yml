@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: portfolio-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      # Sobrescribe la URL de la base de datos si es necesario para Docker
+      # En Docker Desktop (Mac/Windows), host.docker.internal funciona.
+      # En Linux, puede requerir configuración adicional.
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - DDL_AUTO=${DDL_AUTO}
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Esto ayuda a la compatibilidad en Linux
+    networks:
+      - portfolio-network
+
+networks:
+  portfolio-network:
+    name: portfolio-network
+    driver: bridge

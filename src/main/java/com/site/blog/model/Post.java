@@ -1,5 +1,6 @@
-package com.site.docs.model;
+package com.site.blog.model;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -9,24 +10,22 @@ import org.hibernate.annotations.*;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "blog")
 @Data
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE posts SET is_deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE blog SET is_deleted = true WHERE id = ?")
 @SQLRestriction("is_deleted = false")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
-
     @Column(nullable = false, unique = true)
     private String url;
 
+    @JsonRawValue
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
+    private String translation;
 
     @Column(name = "is_published", nullable = false)
     private boolean isPublished = false;

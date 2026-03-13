@@ -1,8 +1,9 @@
-package com.site.docs.repository;
+package com.site.blog.repository;
 
-import com.site.docs.model.Post;
+import com.site.blog.model.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
@@ -19,4 +20,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * Find a post using its ‘url’ field, which is unique.
      */
     Optional<Post> findByUrl(String url);
+
+    List<Post> findByTranslationContainingIgnoreCase(String translation);
 }

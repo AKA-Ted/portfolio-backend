@@ -37,3 +37,6 @@ build/
 .gitattributes
 mvnw
 mvnw.cmd
+
+# Ignore sensitive configuration files
+.env

@@ -1,4 +1,4 @@
-package com.site.docs.dto;
+package com.site.blog.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -7,10 +7,6 @@ import lombok.Data;
 
 @Data
 public class CreatePostRequestDto {
-    @NotBlank(message = "The title can't be empty")
-    @Size(min = 3, max = 255, message = "The title must be between 3 and 255 characters long.")
-    private String title;
-
     @NotBlank(message = "The URL can't be empty")
     @Size(max = 255)
     @Pattern(regexp = "^[a-z0-9]+(?:-[a-z0-9]+)*$",
@@ -18,7 +14,8 @@ public class CreatePostRequestDto {
     private String url;
 
     @NotBlank(message = "The content can't be empty")
-    private String content;
+    @ValidTranslation
+    private String translation;
 
     private boolean isPublished;
 }

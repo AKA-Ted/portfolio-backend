@@ -1,12 +1,14 @@
-package com.site.docs.service;
+package com.site.blog.service;
 
-import com.site.docs.dto.CreatePostRequestDto;
-import com.site.docs.dto.PostResponseDto;
-import com.site.docs.mapper.PostMapper;
-import com.site.docs.model.Post;
-import com.site.docs.repository.PostRepository;
+import com.site.blog.dto.CreatePostRequestDto;
+import com.site.blog.dto.PostResponseDto;
+import com.site.blog.mapper.PostMapper;
+import com.site.blog.model.Post;
+import com.site.blog.repository.PostRepository;
 import com.site.global.exception.ResourceConflictException;
 import com.site.global.exception.ResourceNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +37,10 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    @Transactional
-    public List<PostResponseDto> getAllPosts() {
-        return postRepository.findAll()
-                .stream()
-                .map(PostMapper::toResponseDto)
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public Page<PostResponseDto> getAllPosts(Pageable pageable) {
+        return postRepository.findAll(pageable)
+                .map(PostMapper::toResponseDto);
     }
 
     @Override
@@ -53,22 +53,26 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional(readOnly = true)
-    public PostResponseDto getPostById(Long id) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
-        return PostMapper.toResponseDto(post);
+    public List<PostResponseDto> findByTranslation(String translation) {
+        return postRepository.findByTranslationContainingIgnoreCase(translation)
+                .stream()
+                .map(PostMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public PostResponseDto updatePost(Long id, CreatePostRequestDto updateDto) {
-        Post existingPost = postRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
-        PostMapper.updateEntityFromRequestDto(updateDto, existingPost);
+    @Transactional
+    public PostResponseDto updatePostByUrl(String url, CreatePostRequestDto updateDto) {
+        Post existingPost = postRepository.findByUrl(url)
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "url", url));
 
+        // Check if the new URL is different from the current one and if it already exists
         String newUrl = updateDto.getUrl();
         if (!existingPost.getUrl().equals(newUrl)) {
             checkIfUrlExists(newUrl);
         }
+
+        PostMapper.updateEntityFromRequestDto(updateDto, existingPost);
 
         Post updatedPost = postRepository.save(existingPost);
         return PostMapper.toResponseDto(updatedPost);
@@ -76,11 +80,10 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public void deletePost(Long id) {
-        if (!postRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Post", "id", id);
-        }
-        postRepository.deleteById(id);
+    public void deletePostByUrl(String url) {
+        Post post = postRepository.findByUrl(url)
+                .orElseThrow(() -> new ResourceNotFoundException("Post", "url", url));
+        postRepository.delete(post);
     }
 
     private void checkIfUrlExists(String url) {

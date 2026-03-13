@@ -1,17 +1,16 @@
-package com.site.docs.mapper;
+package com.site.blog.mapper;
 
-import com.site.docs.dto.CreatePostRequestDto;
-import com.site.docs.dto.PostResponseDto;
-import com.site.docs.model.Post;
+import com.site.blog.dto.CreatePostRequestDto;
+import com.site.blog.dto.PostResponseDto;
+import com.site.blog.model.Post;
 
 public final class PostMapper {
     private PostMapper() {}
 
     public static PostResponseDto toResponseDto(Post post) {
         PostResponseDto dto = new PostResponseDto();
-        dto.setTitle(post.getTitle());
         dto.setUrl(post.getUrl());
-        dto.setContent(post.getContent());
+        dto.setTranslation(post.getTranslation());
         dto.setPublished(post.isPublished());
         dto.setCreatedAt(post.getCreatedAt());
         dto.setUpdatedAt(post.getUpdatedAt());
@@ -19,9 +18,8 @@ public final class PostMapper {
     }
 
     public static void updateEntityFromRequestDto(CreatePostRequestDto dto, Post post) {
-        post.setTitle(dto.getTitle());
         post.setUrl(dto.getUrl());
-        post.setContent(dto.getContent());
+        post.setTranslation(dto.getTranslation());
         post.setPublished(dto.isPublished());
     }
 }
