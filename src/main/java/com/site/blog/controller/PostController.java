@@ -1,6 +1,6 @@
 package com.site.blog.controller;
 
-import com.site.blog.dto.CreatePostRequestDto;
+import com.site.blog.dto.PostRequestDto;
 import com.site.blog.dto.PostResponseDto;
 import com.site.blog.service.PostService;
 import com.site.global.dto.GlobalResponse;
@@ -26,8 +26,7 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<GlobalResponse<Page<PostResponseDto>>> getAllPosts(
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
-    ) {
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<PostResponseDto> posts = postService.getAllPosts(pageable);
         return ResponseEntity.ok(GlobalResponse.success(posts));
     }
@@ -45,14 +44,14 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<GlobalResponse<PostResponseDto>> createPost(@Valid @RequestBody CreatePostRequestDto createDto) {
-        PostResponseDto newPost = postService.createPost(createDto);
+    public ResponseEntity<GlobalResponse<PostResponseDto>> createPost(@Valid @RequestBody PostRequestDto createPost) {
+        PostResponseDto newPost = postService.createPost(createPost);
         return new ResponseEntity<>(GlobalResponse.created(newPost), HttpStatus.CREATED);
     }
 
     @PutMapping("/{url}")
     public ResponseEntity<GlobalResponse<PostResponseDto>> updatePost(@PathVariable String url,
-                                                                      @Valid @RequestBody CreatePostRequestDto updateDto) {
+            @Valid @RequestBody PostRequestDto updateDto) {
         PostResponseDto updatedPost = postService.updatePostByUrl(url, updateDto);
         return new ResponseEntity<>(GlobalResponse.success(updatedPost), HttpStatus.OK);
     }

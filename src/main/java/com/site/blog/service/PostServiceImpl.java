@@ -1,6 +1,6 @@
 package com.site.blog.service;
 
-import com.site.blog.dto.CreatePostRequestDto;
+import com.site.blog.dto.PostRequestDto;
 import com.site.blog.dto.PostResponseDto;
 import com.site.blog.mapper.PostMapper;
 import com.site.blog.model.Post;
@@ -26,7 +26,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public PostResponseDto createPost(CreatePostRequestDto createDto) {
+    public PostResponseDto createPost(PostRequestDto createDto) {
         checkIfUrlExists(createDto.getUrl());
 
         Post post = new Post();
@@ -62,7 +62,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     @Transactional
-    public PostResponseDto updatePostByUrl(String url, CreatePostRequestDto updateDto) {
+    public PostResponseDto updatePostByUrl(String url, PostRequestDto updateDto) {
         Post existingPost = postRepository.findByUrl(url)
                 .orElseThrow(() -> new ResourceNotFoundException("Post", "url", url));
 

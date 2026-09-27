@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PostService {
     /** CREATE POST */
-    PostResponseDto createPost(CreatePostRequestDto createDto);
+    PostResponseDto createPost(PostRequestDto createDto);
 
     /** GET LIST POST */
     Page<PostResponseDto> getAllPosts(Pageable pageable);
@@ -17,7 +17,7 @@ public interface PostService {
     PostResponseDto getPostByUrl(String url);
 
     /** UPDATE AN EXISTING POST */
-    PostResponseDto updatePostByUrl(String url, CreatePostRequestDto updateDto);
+    PostResponseDto updatePostByUrl(String url, PostRequestDto updateDto);
 
     /** DELETE POST */
     void deletePostByUrl(String url);

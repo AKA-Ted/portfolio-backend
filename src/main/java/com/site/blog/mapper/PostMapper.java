@@ -1,6 +1,6 @@
 package com.site.blog.mapper;
 
-import com.site.blog.dto.CreatePostRequestDto;
+import com.site.blog.dto.PostRequestDto;
 import com.site.blog.dto.PostResponseDto;
 import com.site.blog.model.Post;
 
@@ -17,7 +17,7 @@ public final class PostMapper {
         return dto;
     }
 
-    public static void updateEntityFromRequestDto(CreatePostRequestDto dto, Post post) {
+    public static void updateEntityFromRequestDto(PostRequestDto dto, Post post) {
         post.setUrl(dto.getUrl());
         post.setTranslation(dto.getTranslation());
         post.setPublished(dto.isPublished());

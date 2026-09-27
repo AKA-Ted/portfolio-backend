@@ -53,27 +53,27 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
 
                 // 6. Configuramos las sesiones como STATELESS
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 // 7. Definimos las REGLAS DE ACCESO
                 .authorizeHttpRequests(authz -> authz
                         // Permitir preflight requests (OPTIONS) explícitamente por si acaso
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // 7a. Permite TODAS las peticiones GET a la API del blog
-                        .requestMatchers(HttpMethod.GET, "/api/blog/**").permitAll()
-
-                        // 7b. Permite TODAS las peticiones GET a la API de experiencia
-                        .requestMatchers(HttpMethod.GET, "/api/experience/**").permitAll()
-
-                        // 7c. Permite TODAS las peticiones a la API de autenticación
+                        // 7a. Permite TODAS las peticiones a la API de autenticación
                         .requestMatchers("/api/auth/**").permitAll()
 
-                        // 7d. Para CUALQUIER OTRA petición...
-                        .anyRequest().authenticated()
-                );
+                        // 7b. Permite TODAS las peticiones GET a la API del blog
+                        .requestMatchers(HttpMethod.GET, "/api/blog/**").permitAll()
+
+                        // 7c. Permite TODAS las peticiones GET a la API de experiencia
+                        .requestMatchers(HttpMethod.GET, "/api/experience/**").permitAll()
+
+                        // 7d. Permite TODAS las peticiones GET a la API de snippets
+                        .requestMatchers(HttpMethod.GET, "/api/snippet/**").permitAll()
+
+                        // 7e. Para CUALQUIER OTRA petición...
+                        .anyRequest().authenticated());
 
         // Add JWT filter
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -85,7 +85,8 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // IMPORTANTE: Asegúrate de que tu frontend corre en uno de estos puertos
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:4200", "http://localhost:5173"));
+        configuration
+                .setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:4200", "http://localhost:5173", "http://localhost:5175"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
